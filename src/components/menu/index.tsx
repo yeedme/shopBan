@@ -20,7 +20,7 @@ const MenuNav = () => {
       //   icon: <ShoppingOutlined />,
       // },
       {
-        label: 'EZBUy-shop',
+        label: 'EzBuy-shop',
         key: 'shop',
         icon: <ShopOutlined />,
       },
@@ -32,14 +32,23 @@ const MenuNav = () => {
    
     ];
     const onClick= (e) => {
-     navigate(e.key)
-      setCurrent(e.key);
+      if(e.key==='ai'){
+        
+      }else {
+
+        navigate(e.key)
+      }
+      // setCurrent(e.key);
     };
     return (
       <>
   
-      <div className='w-[700px] bg-red-700'>
-        <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items} />
+      <div className='w-[400px] '>
+        <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items} style={{
+          backgroundColor:'#f2f2f2',
+          color:"white"
+        }} />
+
       </div>
 
       </>

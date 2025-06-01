@@ -40,13 +40,12 @@ const pages = [
         path: '*',
         element: <>404</>
     }
+    
 ]
 function LazyRouterElement() {
     const element = useRoutes(pages);
     return (<>
-
-        
-<Suspense fallback={<Spin />}>
+         <Suspense fallback={<Spin />}>
             {element}
         </Suspense>
      

@@ -9,12 +9,12 @@ const Layout = () => {
  const nav=useNavigate();
     return (
         <div className='w-screen h-screen  flex flex-col' >
-            <div className='h-12 w-full bg-white flex justify-between items-center '>
-                <div className='w-[120px] text-3xl font-black text-center cursor-pointer ' onClick={()=>nav("home")}>
-                EZBUy
+            <div className='h-12 w-full bg-[#f2f2f2] flex justify-between items-center '>
+                <div className='w-[120px] text-3xl font-black text-center cursor-pointer  ' onClick={()=>nav("home")}>
+                EzBuy
                 </div>
                 <MenuNav />
-                <div className='w-[80px] text-center'>
+                <div className='w-[80px] text-center cursor-pointer' onClick={()=>nav("/")}>
 
                 <LoginOutlined />
                 Login

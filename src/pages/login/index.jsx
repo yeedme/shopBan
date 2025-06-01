@@ -18,6 +18,7 @@ import {
   WechatOutlined,
   AlipayOutlined
 } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 
 const { TabPane } = Tabs;
 
@@ -25,13 +26,14 @@ const Login = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('login');
-
+  const nav=useNavigate();
   const onLogin = (values) => {
     setLoading(true);
     console.log('Login values:', values);
     setTimeout(() => {
       setLoading(false);
-      messageApi.success('登录成功！');
+      messageApi.success('Login successful!');
+      nav('/all/home')
     }, 1000);
   };
 
@@ -40,7 +42,7 @@ const Login = () => {
     console.log('Register values:', values);
     setTimeout(() => {
       setLoading(false);
-      messageApi.success('注册成功！请登录');
+      messageApi.success('Registration successful! Please login');
       setActiveTab('login');
     }, 1000);
   };
@@ -50,8 +52,8 @@ const Login = () => {
       {contextHolder}
       <Card className="w-full max-w-md shadow-lg rounded-lg overflow-hidden">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">欢迎使用购物系统</h1>
-          <p className="text-gray-600 mt-2">请登录或注册以继续</p>
+          <h1 className="text-3xl font-bold text-gray-800">Welcome to Shopping System</h1>
+          <p className="text-gray-600 mt-2">Please login or register to continue</p>
         </div>
         
         <Tabs 
@@ -60,7 +62,7 @@ const Login = () => {
           centered
           className="mb-6"
         >
-          <TabPane tab="登录" key="login">
+          <TabPane tab="Login" key="login">
             <Form
               name="login"
               initialValues={{ remember: true }}
@@ -70,22 +72,22 @@ const Login = () => {
             >
               <Form.Item
                 name="username"
-                rules={[{ required: true, message: '请输入用户名!' }]}
+                rules={[{ required: true, message: 'Please enter your username!' }]}
               >
                 <Input 
                   prefix={<UserOutlined className="text-gray-400" />} 
-                  placeholder="用户名" 
+                  placeholder="Username" 
                   className="rounded-lg"
                 />
               </Form.Item>
 
               <Form.Item
                 name="password"
-                rules={[{ required: true, message: '请输入密码!' }]}
+                rules={[{ required: true, message: 'Please enter your password!' }]}
               >
                 <Input.Password 
                   prefix={<LockOutlined className="text-gray-400" />} 
-                  placeholder="密码" 
+                  placeholder="Password" 
                   className="rounded-lg"
                 />
               </Form.Item>
@@ -93,10 +95,10 @@ const Login = () => {
               <Form.Item>
                 <div className="flex justify-between items-center">
                   <Form.Item name="remember" valuePropName="checked" noStyle>
-                    <Checkbox>记住我</Checkbox>
+                    <Checkbox>Remember me</Checkbox>
                   </Form.Item>
                   <a className="text-blue-500 hover:text-blue-700" href="#">
-                    忘记密码？
+                    Forgot password?
                   </a>
                 </div>
               </Form.Item>
@@ -108,12 +110,12 @@ const Login = () => {
                   className="w-full h-12 rounded-lg" 
                   loading={loading}
                 >
-                  登录
+                  Login
                 </Button>
               </Form.Item>
             </Form>
 
-            <Divider>其他登录方式</Divider>
+            <Divider>Other Login Methods</Divider>
             <div className="flex justify-center space-x-4">
               <Button shape="circle" icon={<GoogleOutlined />} size="large" />
               <Button shape="circle" icon={<WechatOutlined />} size="large" />
@@ -121,7 +123,7 @@ const Login = () => {
             </div>
           </TabPane>
           
-          <TabPane tab="注册" key="register">
+          <TabPane tab="Register" key="register">
             <Form
               name="register"
               onFinish={onRegister}
@@ -131,13 +133,13 @@ const Login = () => {
               <Form.Item
                 name="username"
                 rules={[
-                  { required: true, message: '请输入用户名!' },
-                  { min: 3, message: '用户名至少3个字符!' }
+                  { required: true, message: 'Please enter your username!' },
+                  { min: 3, message: 'Username must be at least 3 characters!' }
                 ]}
               >
                 <Input 
                   prefix={<UserOutlined className="text-gray-400" />} 
-                  placeholder="用户名" 
+                  placeholder="Username" 
                   className="rounded-lg"
                 />
               </Form.Item>
@@ -145,13 +147,13 @@ const Login = () => {
               <Form.Item
                 name="email"
                 rules={[
-                  { required: true, message: '请输入邮箱!' },
-                  { type: 'email', message: '请输入有效的邮箱地址!' }
+                  { required: true, message: 'Please enter your email!' },
+                  { type: 'email', message: 'Please enter a valid email address!' }
                 ]}
               >
                 <Input 
                   prefix={<MailOutlined className="text-gray-400" />} 
-                  placeholder="邮箱" 
+                  placeholder="Email" 
                   className="rounded-lg"
                 />
               </Form.Item>
@@ -159,13 +161,13 @@ const Login = () => {
               <Form.Item
                 name="phone"
                 rules={[
-                  { required: true, message: '请输入手机号!' },
-                  { pattern: /^1\d{10}$/, message: '请输入有效的手机号码!' }
+                  { required: true, message: 'Please enter your phone number!' },
+                  { pattern: /^1\d{10}$/, message: 'Please enter a valid phone number!' }
                 ]}
               >
                 <Input 
                   prefix={<PhoneOutlined className="text-gray-400" />} 
-                  placeholder="手机号" 
+                  placeholder="Phone number" 
                   className="rounded-lg"
                 />
               </Form.Item>
@@ -173,13 +175,13 @@ const Login = () => {
               <Form.Item
                 name="password"
                 rules={[
-                  { required: true, message: '请输入密码!' },
-                  { min: 6, message: '密码至少6个字符!' }
+                  { required: true, message: 'Please enter your password!' },
+                  { min: 6, message: 'Password must be at least 6 characters!' }
                 ]}
               >
                 <Input.Password 
                   prefix={<LockOutlined className="text-gray-400" />} 
-                  placeholder="密码" 
+                  placeholder="Password" 
                   className="rounded-lg"
                 />
               </Form.Item>
@@ -188,20 +190,20 @@ const Login = () => {
                 name="confirm"
                 dependencies={['password']}
                 rules={[
-                  { required: true, message: '请确认密码!' },
+                  { required: true, message: 'Please confirm your password!' },
                   ({ getFieldValue }) => ({
                     validator(_, value) {
                       if (!value || getFieldValue('password') === value) {
                         return Promise.resolve();
                       }
-                      return Promise.reject(new Error('两次输入的密码不一致!'));
+                      return Promise.reject(new Error('The two passwords do not match!'));
                     },
                   }),
                 ]}
               >
                 <Input.Password 
                   prefix={<LockOutlined className="text-gray-400" />} 
-                  placeholder="确认密码" 
+                  placeholder="Confirm password" 
                   className="rounded-lg"
                 />
               </Form.Item>
@@ -212,12 +214,12 @@ const Login = () => {
                 rules={[
                   { 
                     validator: (_, value) =>
-                      value ? Promise.resolve() : Promise.reject(new Error('请同意用户协议'))
+                      value ? Promise.resolve() : Promise.reject(new Error('Please agree to the terms and conditions'))
                   }
                 ]}
               >
                 <Checkbox>
-                  我已阅读并同意 <a href="#" className="text-blue-500">用户协议</a> 和 <a href="#" className="text-blue-500">隐私政策</a>
+                  I have read and agree to the <a href="#" className="text-blue-500">Terms of Service</a> and <a href="#" className="text-blue-500">Privacy Policy</a>
                 </Checkbox>
               </Form.Item>
 
@@ -228,7 +230,7 @@ const Login = () => {
                   className="w-full h-12 rounded-lg" 
                   loading={loading}
                 >
-                  注册
+                  Register
                 </Button>
               </Form.Item>
             </Form>

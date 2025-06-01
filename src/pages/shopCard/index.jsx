@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Modal, Button, Rate, Avatar, List, message, Badge, Input, Tag } from 'antd';
-import { ShoppingCartOutlined, EyeOutlined, SearchOutlined, WechatWorkOutlined } from '@ant-design/icons';
+import { Card, Modal, Button, Rate, Avatar, List, message, Badge, Input, Tag, Progress } from 'antd';
+import { ShoppingCartOutlined, EyeOutlined, SearchOutlined, WechatWorkOutlined, TeamOutlined } from '@ant-design/icons';
 import ShoppingCart from '../../components/ShoppingCart';
+import CustomerService from '../../components/CustomerService';
+import GroupPurchase from '../../components/GroupPurchase';
 
- import { productsData as products,urlData } from './shopData';
+import { productsData as products, urlData } from './shopData';
 
 const ShopCard = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -15,7 +17,11 @@ const ShopCard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredProducts, setFilteredProducts] = useState(products);
   const [messageApi, contextHolder] = message.useMessage();
-  const submitsucessful=()=>{
+  const [isGroupPurchaseVisible, setIsGroupPurchaseVisible] = useState(false);
+  const [groupPurchaseProduct, setGroupPurchaseProduct] = useState(null);
+  const [groupMembers, setGroupMembers] = useState([]);
+
+  const submitsucessful = () => {
     messageApi.success('buy successful');
   }
   const showModal = (product) => {
@@ -26,10 +32,21 @@ const ShopCard = () => {
   const handleCancel = () => {
     setIsModalVisible(false);
   };
-
+  const [url, setUrl] = useState('');
+  const handleClickurl = () => {
+    // if (url) {
+    //   // 确保URL包含http或https
+    //   let finalUrl = url;
+    //   if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    //     finalUrl = 'https://' + url;
+    //   }
+    //   // 在新窗口打开URL
+    //   window.open(finalUrl, '_blank');
+    // }
+  };
   const handleAddToCart = (product) => {
     // Check if product stock is 0
- 
+
 
     setCartItems(prevItems => {
       const existingItem = prevItems.find(item => item.id === product.id);
@@ -79,39 +96,41 @@ const ShopCard = () => {
   };
 
   const handleUrlSubmit = () => {
-    if(urlInput === "https://www.chanel.cn/cn/skincare/sublimage/the-skincare-ritual/") {
-      const urLproduct = urlData[0];
-      if (urLproduct) {
-        setSelectedProduct(urLproduct);
+    if (urlInput === "https://www.chanel.cn/cn/skincare/sublimage/the-skincare-ritual/") {
+      const urlProduct = urlData[0];
+      if (urlProduct) {
+        setSelectedProduct(urlProduct);
         setIsModalVisible(true);
         setIsUrlModalVisible(false);
         setUrlInput('');
       }
+    } else {
+      message.error('Invalid URL or product not found');
     }
+  };
+
+  const handleGroupPurchase = (product) => {
+    setGroupPurchaseProduct(product);
+    setIsGroupPurchaseVisible(true);
+  };
+
+  const handleGroupPurchaseComplete = () => {
+    setIsGroupPurchaseVisible(false);
+    setGroupPurchaseProduct(null);
   };
 
   return (
     <div className="container mx-auto px-4 py-8">
       {contextHolder}
       <div className="fixed bottom-4 left-4 z-50">
-        
-          <Button
-            type="primary"
-          
-            icon={<WechatWorkOutlined  style={{fontSize:30}}/>}
-            size="large"
-            // onClick={() => setIsCartVisible(true)}
-          >
-            online consultant
-            </Button>
-      
+        <CustomerService />
       </div>
       <div className="fixed bottom-4 right-4 z-50">
         <Badge count={cartItems.reduce((sum, item) => sum + item.quantity, 0)}>
           <Button
             type="primary"
             shape="circle"
-            icon={<ShoppingCartOutlined style={{fontSize:30}}/>}
+            icon={<ShoppingCartOutlined style={{ fontSize: 30 }} />}
             size="large"
             onClick={() => setIsCartVisible(true)}
           />
@@ -146,18 +165,19 @@ const ShopCard = () => {
             actions={[
               <EyeOutlined key="view" onClick={() => showModal(product)} />,
               <ShoppingCartOutlined key="cart" onClick={() => handleAddToCart(product)} />,
+              <TeamOutlined key="group" onClick={() => handleGroupPurchase(product)} />,
             ]}
           >
             <Card.Meta
               title={product.name}
               description={
                 <div>
-                  <p className="text-red-500 font-bold">¥{product.price}</p>
-                  <p className="text-gray-500">Stock: 
-                  <Tag color={product.stock > 50 ? 'success' : 'error'}>
-                    {product.stock > 50 ? 'Sufficient' : 'Low Stock'}
-                  </Tag>
-                </p>
+                  <p className="text-red-500 font-bold">${product.price}</p>
+                  <p className="text-gray-500">Stock:
+                    <Tag color={product.stock > 50 ? 'success' : 'error'}>
+                      {product.stock > 50 ? 'Sufficient' : 'Low Stock'}
+                    </Tag>
+                  </p>
                 </div>
               }
             />
@@ -183,24 +203,39 @@ const ShopCard = () => {
               <div className="w-1/2 space-y-4">
                 <h2 className="text-2xl font-bold">{selectedProduct.name}</h2>
                 <p className="text-red-500 text-xl font-bold">¥{selectedProduct.price}</p>
-                {selectedProduct.stock===0?null:
-
-                  <p className="text-gray-500">Stock: 
-                  <Tag color={selectedProduct.stock > 50 ? 'success' : 'error'}>
-                    {selectedProduct.stock > 50 ? 'Sufficient' : 'Low Stock'}
-                  </Tag>
-                </p>
+                {selectedProduct.stock === 0 ? null :
+                  <p className="text-gray-500">Stock:
+                    <Tag color={selectedProduct.stock > 50 ? 'success' : 'error'}>
+                      {selectedProduct.stock > 50 ? 'Sufficient' : 'Low Stock'}
+                    </Tag>
+                  </p>
                 }
-                <Button
-                  type="primary"
-                  icon={<ShoppingCartOutlined />}
-                  onClick={() => handleAddToCart(selectedProduct)}
-                >
-                  Add to Cart
-                </Button>
+                <div className="flex gap-4">
+                  <Button
+                    type="primary"
+                    icon={<ShoppingCartOutlined />}
+                    onClick={() => handleAddToCart(selectedProduct)}
+                  >
+                    Add to Cart
+                  </Button>
+                  <Button
+                    type="primary"
+                    icon={<TeamOutlined />}
+                    onClick={() => {
+                      setGroupPurchaseProduct(selectedProduct);
+                      setIsGroupPurchaseVisible(true);
+                      setGroupMembers([
+                        { id: 1, name: 'User 1', joinedAt: new Date(Date.now() - 3600000) },
+                        { id: 2, name: 'User 2', joinedAt: new Date(Date.now() - 1800000) }
+                      ]);
+                    }}
+                  >
+                    Group Buy (2/3)
+                  </Button>
+                </div>
               </div>
             </div>
-            
+
             <div className="mt-8">
               <h3 className="text-lg font-semibold mb-4">Product Details</h3>
               <p>{selectedProduct.description}</p>
@@ -240,7 +275,7 @@ const ShopCard = () => {
         submitsucessful={submitsucessful}
       />
       {/** 这个modal里会有一个输入框和确认按钮，当输入对应url，会自动打开商品详情页（会根据这个url去匹配对应的商品数据，这些数据都是模拟数据，不需要提高接口去实现，）*/}
-      
+
       <Modal
         title="Purchase by URL"
         open={isUrlModalVisible}
@@ -261,11 +296,27 @@ const ShopCard = () => {
         ]}
       >
         <Input
-          placeholder="Enter product URL (e.g.: /product/1)"
+          placeholder="Enter product URL"
+          size="large"
           value={urlInput}
           onChange={(e) => setUrlInput(e.target.value)}
+          onPressEnter={handleUrlSubmit}
         />
+        <div style={{ marginTop: '16px', color: '#666' }}>
+          <p>Example URL: https://www.chanel.cn/cn/skincare/sublimage/the-skincare-ritual/</p>
+        </div>
       </Modal>
+
+      {isGroupPurchaseVisible && groupPurchaseProduct && (
+        <GroupPurchase
+          product={groupPurchaseProduct}
+          onClose={() => {
+            setIsGroupPurchaseVisible(false);
+            setGroupPurchaseProduct(null);
+          }}
+          onComplete={handleGroupPurchaseComplete}
+        />
+      )}
     </div>
   );
 };
