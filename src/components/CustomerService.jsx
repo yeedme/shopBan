@@ -9,33 +9,44 @@ const CustomerService = () => {
 
   // Predefined responses for common questions
   const predefinedResponses = {
-    'hello': 'Hello! How can I help you today?',
-    'hi': 'Hi there! How can I assist you?',
-    'price': 'Our prices are competitive and vary by product. Please check the product details for specific pricing.',
-    'shipping': 'We offer free shipping for orders over $100. Standard shipping takes 3-5 business days.',
-    'return': 'We have a 30-day return policy. Please keep your receipt and original packaging.',
-    'payment': 'We accept all major credit cards, PayPal, and bank transfers.',
-    'stock': 'Please check the product page for current stock availability.',
-    'delivery': 'Delivery typically takes 3-5 business days within the continental US.',
+    'Which courier service is used': 'International shipping is arranged by the platform. For domestic delivery, we use ZTO or STO by default. SF Express is available upon request with an additional fee.',
+    'Track the customs clearance progress': 'Customs clearance requires uploading your ID card (click to upload). It will be processed by the local customs, and typically takes 3–5 business days (subject to actual clearance time).',
+    'Check the shipping time': 'Shipping times are affected by various factors. The delivery time shown on the order page reflects the estimated timeframe under normal conditions. If there is a significant delay in the shipment, please contact customer service for further assistance.',
+    // 'shipping': 'We offer free shipping for orders over $100. Standard shipping takes 3-5 business days.',
+    // 'return': 'We have a 30-day return policy. Please keep your receipt and original packaging.',
+    // 'payment': 'We accept all major credit cards, PayPal, and bank transfers.',
+    // 'stock': 'Please check the product page for current stock availability.',
+    // 'delivery': 'Delivery typically takes 3-5 business days within the continental US.',
   };
 
-  const handleSend = () => {
-    if (!inputValue.trim()) return;
+  const quickQuestions = [
+    'Which courier service is used',
+    'Track the customs clearance progress',
+    'Check the shipping time'
+  ];
+
+  const handleQuickInput = (question) => {
+    setInputValue(question);
+    handleSend(question);
+  };
+
+  const handleSend = (text = inputValue) => {
+    if (!text.trim()) return;
 
     // Add user message
     const userMessage = {
       type: 'user',
-      content: inputValue,
+      content: text,
       time: new Date().toLocaleTimeString(),
     };
 
     // Generate response
-    const lowerInput = inputValue.toLowerCase();
+    const lowerInput = text.toLowerCase();
     let response = "I'm sorry, I don't understand. Please try asking about our prices, shipping, returns, payment methods, stock, or delivery.";
     
     // Check for keywords in the input
     for (const [key, value] of Object.entries(predefinedResponses)) {
-      if (lowerInput.includes(key)) {
+      if (lowerInput.includes(key.toLowerCase())) {
         response = value;
         break;
       }
@@ -74,10 +85,10 @@ const CustomerService = () => {
         open={isVisible}
         onCancel={() => setIsVisible(false)}
         footer={null}
-        width={400}
-        style={{ position: 'absolute', bottom: 20, right: 20 }}
+        width={700}
+        // style={{ position: 'absolute', bottom: 20, right: 20 }}
       >
-        <div style={{ height: '400px', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ height: '600px', display: 'flex', flexDirection: 'column' }}>
           <div style={{ flex: 1, overflowY: 'auto', marginBottom: '16px' }}>
             <List
               itemLayout="horizontal"
@@ -103,7 +114,18 @@ const CustomerService = () => {
               )}
             />
           </div>
-          <div style={{ display: 'flex', gap: '8px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
+              {quickQuestions.map((question, index) => (
+                <Button 
+                  key={index}
+                  onClick={() => handleQuickInput(question)}
+                  type="default"
+                >
+                  {question}
+                </Button>
+              ))}
+            </div>
             <Input
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
@@ -111,7 +133,7 @@ const CustomerService = () => {
               placeholder="Type your message..."
               suffix={
                 <SendOutlined
-                  onClick={handleSend}
+                  onClick={() => handleSend()}
                   style={{ cursor: 'pointer' }}
                 />
               }

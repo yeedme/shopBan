@@ -104,7 +104,22 @@ const ShopCard = () => {
         setIsUrlModalVisible(false);
         setUrlInput('');
       }
-    } else {
+    } //https://aeioustore.com/product/detail.html?product_no=1387&cate_no=24&display_group=1 
+    //https://saffymcnamara.com/products/here-i-will-wait-for-you-cushion-reversible
+    else if (urlInput === "https://aeioustore.com/product/detail.html?product_no=1387&cate_no=24&display_group=1") {
+      const urlProduct = urlData[1];
+      if (urlProduct) {
+        setSelectedProduct(urlProduct);
+        setIsModalVisible(true);
+      }
+    } else if (urlInput === "https://saffymcnamara.com/products/here-i-will-wait-for-you-cushion-reversible") {
+      const urlProduct = urlData[2];
+      if (urlProduct) {
+        setSelectedProduct(urlProduct);
+        setIsModalVisible(true);
+      }
+    }
+    else {
       message.error('Invalid URL or product not found');
     }
   };
@@ -202,7 +217,7 @@ const ShopCard = () => {
               />
               <div className="w-1/2 space-y-4">
                 <h2 className="text-2xl font-bold">{selectedProduct.name}</h2>
-                <p className="text-red-500 text-xl font-bold">¥{selectedProduct.price}</p>
+                <p className="text-red-500 text-xl font-bold">${selectedProduct.price}</p>
                 {selectedProduct.stock === 0 ? null :
                   <p className="text-gray-500">Stock:
                     <Tag color={selectedProduct.stock > 50 ? 'success' : 'error'}>

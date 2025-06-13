@@ -194,16 +194,32 @@ const productsData = [
     },
     {
       id: 2,
-      name: 'MacBook Pro',
-      price: 12999,
+      name: 'Aeiou Keyring Pouch (XS) 4Colors',
+      price: 17500,
       stock: 30,
-      image: 'https://picsum.photos/300/200?random=2',
-      description: 'Professional laptop for creative work.',
+      image: 'https://cafe24img.poxo.com/aeioustore/web/product/small/202504/ad1ed72a78e2bfc6b9b4f8e67f04e36f.png',
+      description: 'Designed by Aeiou, made in Korea',
       comments: [
         {
           author: '王五',
           avatar: 'https://joeschmoe.io/api/v1/random',
-          content: '性能强大，屏幕显示效果很好！',
+          content: 'nice！',
+          datetime: '2024-03-13 10:20:00',
+        },
+      ],
+    },
+    {
+      id: 3,
+      name: 'Here I Will Wait For You Cushion',
+      price: 107.00,
+      stock: 30,
+      image: 'https://saffymcnamara.com/cdn/shop/files/IMG_0448-3_2048x2048.jpg?v=1749040020',
+      description: 'Reversible Cushion !',
+      comments: [
+        {
+          author: '王五',
+          avatar: 'https://joeschmoe.io/api/v1/random',
+          content: 'nice！',
           datetime: '2024-03-13 10:20:00',
         },
       ],
